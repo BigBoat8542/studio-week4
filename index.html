@@ -1,117 +1,59 @@
 <html>
-<head>
-  <title>A Leaflet map!</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <style>
-    #map{height: 100%}
+  <head>
+  <title>Rats in Boston Map</title>
+	  
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script> 
+  <script src="./leaflet-heat.js"></script>
+	  
+	  
+  <!-- Add CSS styling info for the map -->
+  <style type="text/css">
   </style>
-  <link rel="stylesheet" href="styles.css" />
-</head>
+  <!-- Adding styling info for page layout by reading in a CSS file -->
+  <link rel="stylesheet" href="styles.css">
+  </head>
 <body>
-
-  <h1> Mapping Rats in Boston Studio Week 4 </h1>
+	  <h1>Studio Week 4 <br> City of Boston Rats </h1>
+  <!-- Add multiple pages to web page-->
+  <ul>
+ <li><a class="active" href="index.html" target="_self">Rats in Boston</a></li>
+ <li><a href="spreadsheet.html" target="_self">SF Food Banks</a></li>
+ <li><a href="NYC.html" target="_self">HotSpots</a></li>
+  </ul>
   <br>
-  <div class="container">
-    <div class="center">
-      <ul>
-        <li><a class="active" href="index.html" target="_self"> Rats in Boston</a></li>
-        <li><a href="spreadsheet.html" target="_self">SF Food Banks</a></li>
-      </ul>
-    </div>
-  </div>
+	
   <div id="map"></div>
-
   <script>
-
   // initialize the map
-    var map = L.map('map').setView([42.35, -71.08], 13);
-
+     // initialize the map
+  var map = L.map('map').setView([42.35, -71.08], 10);
   // load a tile layer
-    L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',{
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>,Data by <a href="http://mass.gov/mgis>MassGIS</a>',
+	  // base map
+  L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+    {
+      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
       maxZoom: 17,
       minZoom: 9
     }).addTo(map);
-
-    // base map
-    L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',{
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>,Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
-
-  // load GeoJSON from an external file
+    map.setZoom(12);
+	  
+// load GeoJSON from an external file 
     $.getJSON("rodents.geojson",function(data){
-      var ratIcon = L.icon({
-      iconUrl: 'rat.gif',
-      iconSize: [50,40]
+      var locations = data.features.map(function(rat) {
+        // the heatmap plugin wants an array of each location
+        var location = rat.geometry.coordinates.reverse();
+        location.push(0.5);
+        return location; 
+      });
+// add heat layer
+      var heat = L.heatLayer(locations, { radius: 35 });
+      map.addLayer(heat);
     });
-    L.geoJson(data  ,{
-      pointToLayer: function(feature,latlng){
-	    return L.marker(latlng,{icon: ratIcon});
-      }
-    }  ).addTo(map);
-  });
-
-//Add some style
-    $.getJSON("rodents.geojson",function(data){
-    var ratIcon = L.icon({
-    iconUrl: 'rat.gif',
-    iconSize: [50,40]
-  }); 
-  L.geoJson(data  ,{
-    pointToLayer: function(feature,latlng){
-	  return L.marker(latlng,{icon: ratIcon});
-    }
-  }  ).addTo(map);
-});	  
-	  
-   // Interaction
-    pointToLayer: function(feature,latlng){
-    var marker = L.marker(latlng,{icon: ratIcon});
-  marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-  return marker; 
-}
-     $.getJSON("neighborhoods.geojson",function(hoodData){
-  L.geoJson( hoodData ).addTo(map);
-}); 
-// Polygons
-$.getJSON("rodents.geojson",function(data){
-  var ratIcon = L.icon({
-    iconUrl: 'rat.png',
-    iconSize: [60,50]
-  });
-  L.geoJson(data,{
-    pointToLayer: function(feature,latlng){
-      var marker = L.marker(latlng,{icon: ratIcon});
-      marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-      return marker;
-    }
-  }).addTo(map);
-});
-	  
- //Thematic Styles
-    
-$.getJSON("neighborhoods.geojson",function(hoodData){
-L.geoJson( hoodData  , {
-    style: function(feature){
-      var fillColor,
-          density = feature.properties.density;
-      if ( density > 80 ) fillColor = "#006837";
-      else if ( density > 40 ) fillColor = "#31a354";
-      else if ( density > 20 ) fillColor = "#78c679";
-      else if ( density > 10 ) fillColor = "#c2e699";
-      else if ( density > 0 ) fillColor = "#ffffcc";
-      else fillColor = "#f7f7f7";  // no data
-      return { color: "#999", weight: 1, fillColor: fillColor, fillOpacity: .6 };
-    },
-    onEachFeature: function( feature, layer ){
-      layer.bindPopup( "<strong>" + feature.properties.Name + "</strong><br/>" + feature.properties.density + " rats per square mile" )
-    }
-  }  ).addTo(map);
-});	  
+  
 	  
   </script>
 </body>
