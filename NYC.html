@@ -37,15 +37,6 @@
   
   // initialize the map
   var map = L.map('map').setView([40, -74], 13);
-  
-  // load a tile layer
-  L.tileLayer('https://c.tile.openstreetmap.de/${z}/${x}/${y}.png',
-    {
-      attribution: 'https://www.openstreetmap.de/karte.html',
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
-    map.setZoom(12);
 
     //load geojson
     $.getJSON("NYC_Wi-Fi_Hotspot_Locations.geojson",function(data){
@@ -53,8 +44,7 @@
         // the heatmap plugin wants an array of each location
         var location = wifi.geometry.coordinates.reverse();
         location.push(0.5);
-        return location; // e.g. [50.5, 30.5, 0.2], // lat, lng, intensity
-      });
+        return location; 
 
     
   </script>
