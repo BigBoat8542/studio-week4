@@ -84,6 +84,7 @@
    <ul>
       <li><a class="active" href="index.html" target="_self">City of Boston Rats</a></li>
       <li><a class="active" href="spreadsheet.html" target="_self">San Francisco Food Banks</a></li>
+      <li><a href="NYC.html" target="_self">HotSpots</a></li>
     </ul>
 
   <br>
@@ -104,17 +105,17 @@
           : url
       };
     };
-    //YOUR TURN: add your Mapbox token
+ //YOUR TURN: add your Mapbox token
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibHVrZTg1NDIiLCJhIjoiY2s4cnE5bnRrMGhpajNtcG00b3lreXlycyJ9.AcYo0A3SUOqMDzGmF83huQ'; //Mapbox token
     var map = new mapboxgl.Map({
       container: 'map', // container id
       style: 'mapbox://styles/mapbox/streets-v11', // YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
-      center: [-122.411, 37.785], // starting position [lng, lat]
-      zoom: 10,// starting zoom
+      center: [-122.411, 37.785], 
+      zoom: 10,
       transformRequest: transformRequest
     });
-
+//Get document from internet
     $(document).ready(function () {
       $.ajax({
         type: "GET",
@@ -123,7 +124,7 @@
         dataType: "text",
         success: function (csvData) { makeGeoJSON(csvData); }
       });
-
+// 
       function makeGeoJSON(csvData) {
         csv2geojson.csv2geojson(csvData, {
           latfield: 'Latitude',
@@ -132,7 +133,7 @@
         }, function (err, data) {
           map.on('load', function () {
 
-            //Add the the layer to the map
+//Add the the layer to the map
             map.addLayer({
               'id': 'csvData',
               'type': 'circle',
