@@ -40,34 +40,8 @@
 	  </div>
 <p> Wifi Hotspots NYC</p>
 <script src="https://embed.github.com/view/geojson/BigBoat8542/studio-week4/master/NYC_Wi-Fi_Hotspot_Locations.geojson"></script>
-
+	</div>
 	
-  var map = L.map('map').setView([40, -74], 10);
-  // load a tile layer
-// base map
-  L.tileLayer('https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png',
-    {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://www.openstreetmap.bzh/" target="_blank">Breton OpenStreetMap Team</a>', // add new basemap
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
-    map.setZoom(12);
-	  
-// load GeoJSON from an external file 
-    $.getJSON("NYC_Wi-Fi_Hotspot_Locations.geojson",function(data){
-var wifi = L.icon({
-iconUrl: 'https://BigBoaat8542.github.io/studio-week4/images/wifi.png',
-iconSize: [55,75]
-});
-	    // add geojson to map
-var Wifi =   L.geoJson(data,{
-      pointToLayer: function(feature,latlng){
-        var marker = L.marker(latlng,{icon: wifi});
-        return marker;
-      }
-    });
-  
-	 
   </script>
 </body>
 </html>
