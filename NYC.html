@@ -39,9 +39,9 @@
   var map = L.map('map').setView([40, -74], 13);
   
   // load a tile layer
-  L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+  L.tileLayer('https://c.tile.openstreetmap.de/${z}/${x}/${y}.png',
     {
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+      attribution: 'https://www.openstreetmap.de/karte.html',
       maxZoom: 17,
       minZoom: 9
     }).addTo(map);
