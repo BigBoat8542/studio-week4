@@ -24,7 +24,12 @@
 
   // initialize the map
   var map = L.map('map').setView([40, -74], 13);
-
+//add tile layer
+	  
+var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+});
   // load GeoJSON from an external file
   $.getJSON("NYC_Wi-Fi_Hotspot_Locations.geojson",function(data){
     // add GeoJSON layer to the map once the file is loaded
